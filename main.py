@@ -4,6 +4,12 @@ from parser import to_dict, to_sorted, parse_csv
 
 
 def color_creator(places, key):
+    """
+    according to the number of movies filmed in certain places,
+    returns corresponding color
+    :param places - (dict)
+    :param key - (str)
+    """
     if len(places[key]) < 1000:
         return "green"
     elif 2000 <= len(places[key]) <= 3500:
@@ -12,6 +18,13 @@ def color_creator(places, key):
 
 
 def map_creator(usr_loc, mov_locations, filtered, year):
+    """
+    creates an html map
+    :param usr_loc - (str)
+    :param mov_locations - (dict)
+    :param filtered - (list)
+    :param year - (int)
+    """
     lat = [i[0] for i in list(mov_locations.values())]
     lon = [i[1] for i in list(mov_locations.values())]
 
