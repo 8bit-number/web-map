@@ -34,6 +34,11 @@ def parse_csv(path):
 
 
 def to_dict(final, year):
+    """
+    processes data from list to dictionary
+    :param final: (list)
+    :param year: (int)
+    """
     d = {}
     filtered = []
     for each in tqdm(final):
@@ -48,6 +53,11 @@ def to_dict(final, year):
 
 
 def to_sorted(final, year):
+    """
+    according to the choice of the user, takes films and adds them to list
+    :param final: (list)
+    :param year: (int)
+    """
     filtered = []
     for w in final:
         if year == w[1] and w[2] != 'NO DATA':
