@@ -1,8 +1,7 @@
 import folium
 from get_info import get_year, get_user_location
 from parser import to_dict, to_sorted, parse_csv
-import time
-from tqdm import tqdm
+
 
 def color_creator(places, key):
     if len(places[key]) < 1000:
@@ -13,7 +12,6 @@ def color_creator(places, key):
 
 
 def map_creator(usr_loc, mov_locations, filtered, year):
-
     lat = [i[0] for i in list(mov_locations.values())]
     lon = [i[1] for i in list(mov_locations.values())]
 
@@ -30,38 +28,41 @@ def map_creator(usr_loc, mov_locations, filtered, year):
 
     for lt, ln, ch, key in zip(lat, lon, filtered, places):
         mov_density.add_child(folium.CircleMarker(location=[lt, ln],
-                                            radius=10,
-                                            popup=ch[0],
-                                            fill_color=color_creator(places, key),
-                                            color='red',
-                                            fill_opacity=0.5))
-
+                                                  radius=10,
+                                                  popup=ch[0],
+                                                  fill_color=color_creator(
+                                                      places, key),
+                                                  color='red',
+                                                  fill_opacity=0.5))
 
     movies_loc = folium.FeatureGroup(name='all movies for %d year' % year)
     for lt, ln, mov in zip(lat, lon, filtered):
         movies_loc.add_child(folium.Marker(location=[lt, ln],
-                                popup=mov[0],
-                                icon=folium.Icon()))
-
+                                           popup=mov[0],
+                                           icon=folium.Icon()))
 
     population = folium.FeatureGroup(name='population')
     population.add_child(folium.GeoJson(data=open('world.json', 'r',
-                                 encoding='utf-8-sig').read(),
-                                 style_function=lambda x: {'fillColor':'green'
-        if x['properties']['POP2005'] < 10000000
-        else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000
-        else 'purple'}))
+                                                  encoding='utf-8-sig').read(),
+                                        style_function=lambda x: {
+                                            'fillColor': 'green'
+                                            if x['properties'][
+                                                   'POP2005'] < 10000000
+                                            else 'orange' if 10000000 <=
+                                                             x['properties'][
+                                                                 'POP2005'] < 20000000
+                                            else 'purple'}))
 
-    legend_html =   '''
-                    <div style="position: fixed;
-                                bottom: 50px; left: 50px;
-                                border:2px solid grey; z-index:9999; font-size:14px; background:white;
-                                ">&nbsp; The Population Markers <br>
-                                  &nbsp; < 10.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:green"></i><br>
-                                  &nbsp; < 20.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:purple"></i><br>
-                                  &nbsp; > 10.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:orange"></i>
-                    </div>
-                    '''
+    legend_html = '''
+<div style="position: fixed;
+            bottom: 50px; left: 50px;
+            border:2px solid grey; z-index:9999; font-size:14px; background:white;
+            ">&nbsp; The Population Markers <br>
+              &nbsp; < 10.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:green"></i><br>
+              &nbsp; < 20.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:purple"></i><br>
+              &nbsp; > 10.000.000  &nbsp; <i class="fa fa-circle fa-2x" style="color:orange"></i>
+</div>
+'''
 
     map.add_child(mov_density)
     map.add_child(movies_loc)
@@ -70,7 +71,7 @@ def map_creator(usr_loc, mov_locations, filtered, year):
 
     map.add_child(folium.LayerControl())
 
-    map.save('First.html')
+    map.save('{}.html'.format(year))
 
 
 if __name__ == "__main__":
@@ -79,20 +80,5 @@ if __name__ == "__main__":
     places = to_dict(locations, year)
     usr_loc = get_user_location()
     mov_locations = to_dict(locations, year)
-    filtered = to_sorted(locations,year)
+    filtered = to_sorted(locations, year)
     map_creator(usr_loc, mov_locations, filtered, year)
-        # for i in tqdm(range(len(filtered))):
-        # time.sleep(3)
-
-
-
-
-
-# map_creator(get_user_location(
-# to_dict(parse_csv("locations1.csv"), get_year())
-# [0],
-#                  get_user_location(to_dict(parse_csv("locations1.csv"), get_year()))[1],
-#                   get_user_location(to_dict(parse_csv("locations1.csv"), get_year()))[2],
-#                   to_sorted(parse_csv("locations1.csv"), get_year()),
-#                   get_year())
-

@@ -38,11 +38,11 @@ def to_dict(final, year):
     filtered = []
     for each in tqdm(final):
         if year == each[1] and each[2] != 'NO DATA':
-                filtered.append(each)
-                location = geolocator.geocode(each[2], timeout=10)
-                if location:
-                    d[each[2]] = (location.latitude, location.longitude)
-                    each.append((location.latitude, location.longitude))
+            filtered.append(each)
+            location = geolocator.geocode(each[2], timeout=10)
+            if location:
+                d[each[2]] = (location.latitude, location.longitude)
+                each.append((location.latitude, location.longitude))
 
     return d
 
@@ -53,4 +53,3 @@ def to_sorted(final, year):
         if year == w[1] and w[2] != 'NO DATA':
             filtered.append(w)
     return filtered
-
